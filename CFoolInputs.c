@@ -2,6 +2,7 @@
 #include <conio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #define CFISTRING_LEN 128
 
@@ -116,7 +117,7 @@ bool get_input_yes_or_no()
             printf("\x1B[0E");
             printf("%c", buffer_choice);
 
-            if ((int)character == 13 & (buffer_choice == 'N' || buffer_choice == 'Y'))
+            if ((int)character == 13 && (buffer_choice == 'N' || buffer_choice == 'Y'))
             {
                 running = 0;
                 printf("\n");
@@ -127,4 +128,43 @@ bool get_input_yes_or_no()
     bool return_bool = buffer_choice == 'Y';
 
     return return_bool;
+}
+
+int get_input_int()
+{
+    char buffer_str[CFISTRING_LEN] = "";
+    int cursor = 0;
+
+    int running = 1;
+    while (running)
+    {
+        if (kbhit())
+        {
+            char character = (char)getch();
+
+            if ((int)character == 8 && cursor != 0)
+            {
+                buffer_str[cursor] = (char)0;
+                cursor--;
+                buffer_str[cursor] = (char)0;
+            }
+            else if ((int)character != 13 && character <= '9' && character >= '0')
+            {
+                buffer_str[cursor] = character;
+                cursor++;
+            }
+
+            printf("\x1B[2K");
+            printf("\x1B[0E");
+            printf(buffer_str);
+
+            if ((int)character == 13)
+            {
+                running = 0;
+                printf("\n");
+            }
+        }
+    }
+
+    return atoi(buffer_str);
 }
