@@ -168,3 +168,20 @@ int get_input_int()
 
     return atoi(buffer_str);
 }
+
+// NOTE: REAL TIME STUFF
+
+bool was_any_key_pressed = false;
+char last_key_pressed = ' ';
+
+void check_cfi() // Use in the start of every frame
+{
+    was_any_key_pressed = kbhit();
+    if (was_any_key_pressed) last_key_pressed = getch();
+}
+
+bool is_key_pressed(char key)
+{
+    if (!was_any_key_pressed) return false;
+    else return key == last_key_pressed;
+}
